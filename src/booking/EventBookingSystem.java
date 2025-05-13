@@ -1,4 +1,4 @@
-package Ticket_Booking_System.baseClasses;
+package booking;
 
 import java.io.*;
 import java.util.*;
@@ -16,6 +16,7 @@ public class EventBookingSystem {
         tickets = new ArrayList<>();
     }
 
+    // Method to register a user (Attendee/Organizer)
     public void registerUser(String id, String name, String userType) {
         if (userType.equalsIgnoreCase("Attendee")) {
             Attendee attendee = new Attendee(id, name);
@@ -30,12 +31,14 @@ public class EventBookingSystem {
         }
     }
 
+    // Method to add an event
     public void addEvent(String title, int availableTickets) {
         Event event = new Event(title, availableTickets);
         events.add(event);
         System.out.println("Event added successfully.");
     }
-    
+
+    // Method to book a ticket
     public void bookTicket(String attendeeId, String eventTitle) {
         Attendee attendee = findAttendeeById(attendeeId);
         Event event = findEventByTitle(eventTitle);
@@ -60,6 +63,7 @@ public class EventBookingSystem {
         }
     }
 
+    // Method to show all events
     public void showEvents() {
         if (events.isEmpty()) {
             System.out.println("No events available.");
@@ -71,6 +75,7 @@ public class EventBookingSystem {
         }
     }
 
+    // Method to save events to a file
     public void saveEvents() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("events.dat"))) {
             oos.writeObject(events);
@@ -80,6 +85,7 @@ public class EventBookingSystem {
         }
     }
 
+    // Method to load events from a file
     public void loadEvents() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("events.dat"))) {
             events = (List<Event>) ois.readObject();
@@ -89,6 +95,7 @@ public class EventBookingSystem {
         }
     }
 
+    // Utility Method: Find Attendee by ID
     private Attendee findAttendeeById(String id) {
         for (Attendee attendee : attendees) {
             if (attendee.getId().equals(id)) {
@@ -98,6 +105,7 @@ public class EventBookingSystem {
         return null;
     }
 
+    // Utility Method: Find Event by Title
     private Event findEventByTitle(String title) {
         for (Event event : events) {
             if (event.getTitle().equalsIgnoreCase(title)) {
@@ -106,4 +114,27 @@ public class EventBookingSystem {
         }
         return null;
     }
+
+    public void registerUser(Attendee attendee) {
+        for (Attendee existingAttendee : attendees) {
+            if (existingAttendee.getId().equals(attendee.getId())) {
+                System.out.println("Attendee with ID " + attendee.getId() + " is already registered.");
+                return;
+            }
+        }
+        attendees.add(attendee);
+        System.out.println("Attendee " + attendee.getName() + " registered successfully.");
+    }
+
+    public void addEvent(Event event) {
+        for (Event existingEvent : events) {
+            if (existingEvent.getTitle().equalsIgnoreCase(event.getTitle())) {
+                System.out.println("Event titled '" + event.getTitle() + "' already exists.");
+                return;
+            }
+        }
+        events.add(event);
+        System.out.println("Event '" + event.getTitle() + "' added successfully with " + event.getAvailableTickets() + " tickets.");
+    }
+
 }
