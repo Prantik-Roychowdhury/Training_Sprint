@@ -1,4 +1,4 @@
-package booking;
+package Ticket_Booking_System.baseClasses;
 
 public class Event {
     private String title;
